@@ -49,10 +49,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             // 학습시 필요없으니 None이 아닌경우에만 Bbox,keypoint를 추출하도록 합니다.
             if keypoint.is_some() {
                 // Bbox,keypoint 좌표를 width, height로 나눈 값으로 스케일링
+                // OCHuman의 Bbox는 xyxy입니다.(xywh가 아님)
                 let bbox_x1 = bbox.clone().unwrap()[0] / (*width) as f32;
                 let bbox_y1 = bbox.clone().unwrap()[1] / (*height) as f32;
-                let bbox_x2 = bbox.clone().unwrap()[2] / (*width) as f32;
-                let bbox_y2 = bbox.clone().unwrap()[3] / (*height) as f32;
+                let bbox_x2 =
+                    (bbox.clone().unwrap()[2] - bbox.clone().unwrap()[0]) / (*width) as f32;
+                let bbox_y2 =
+                    (bbox.clone().unwrap()[3] - bbox.clone().unwrap()[1]) / (*height) as f32;
 
                 let mut transformed_keypoints: Vec<f32> = Vec::new();
                 for i in 0..keypoint.clone().unwrap().len() {
