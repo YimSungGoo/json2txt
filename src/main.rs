@@ -48,7 +48,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             // 데이터셋에는 keypoint가 None인경우에도 bbox좌표는 존재했는데
             // 학습시 필요없으니 None이 아닌경우에만 Bbox,keypoint를 추출하도록 합니다.
             if keypoint.is_some() {
-                // Bbox,keypoint 좌표를 width, height로 나눈 값으로 스케일링
                 // OCHuman의 Bbox는 x0y0x1y1입니다.(cx0cy0wh가 아님)
                 let bbox_x1 = (bbox.clone().unwrap()[0]
                     + (bbox.clone().unwrap()[2] - bbox.clone().unwrap()[0]) / 2.0)
@@ -61,9 +60,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let bbox_y2 =
                     (bbox.clone().unwrap()[3] - bbox.clone().unwrap()[1]) / (*height) as f32;
 
+                // Bbox,keypoint 좌표를 width, height로 나눈 값으로 스케일링
+                // i = 36~41; head,neck (x,y,v)좌표
                 let mut transformed_keypoints: Vec<f32> = Vec::new();
                 for i in 0..keypoint.clone().unwrap().len() {
-                    if i % 3 == 0 {
+                    if i % 3 == 0 && i != 36 && i != 37 && i != 38 && i != 39 && i != 40 && i != 41
+                    {
                         let x = keypoint.clone().unwrap()[i] / *width as f32;
                         let y = keypoint.clone().unwrap()[i + 1] / *height as f32;
                         transformed_keypoints.push(x);
