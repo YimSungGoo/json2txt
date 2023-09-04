@@ -21,6 +21,16 @@ struct Annotation {
     bbox: Option<Vec<f32>>,
 }
 
+fn swap3p<T>(vec: &mut Vec<T>, index1: usize, index2: usize) {
+    if index1 * 3 + 2 < vec.len() && index2 * 3 + 2 < vec.len() {
+        vec.swap(index1 * 3, index2 * 3);
+        vec.swap(index1 * 3 + 1, index2 * 3 + 1);
+        vec.swap(index1 * 3 + 2, index2 * 3 + 2);
+    } else {
+        println!("인덱스가 벡터의 길이를 벗어나 swap을 진행할 수 없습니다..");
+    }
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut file = File::open("/media/qnap/pose/OCHuman/ochuman.json").unwrap();
     let mut contents = String::new();
@@ -73,6 +83,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         transformed_keypoints.push(keypoint.clone().unwrap()[i + 2]);
                     }
                 }
+                // keypoint순서 변경
+                swap3p(&mut transformed_keypoints, 0, 14);
+                swap3p(&mut transformed_keypoints, 1, 16);
+                swap3p(&mut transformed_keypoints, 2, 15);
+                swap3p(&mut transformed_keypoints, 3, 13);
+                swap3p(&mut transformed_keypoints, 4, 12);
+                swap3p(&mut transformed_keypoints, 5, 13);
+                swap3p(&mut transformed_keypoints, 6, 14);
+                swap3p(&mut transformed_keypoints, 7, 12);
+                swap3p(&mut transformed_keypoints, 8, 16);
+                swap3p(&mut transformed_keypoints, 10, 15);
+                swap3p(&mut transformed_keypoints, 9, 13);
+                swap3p(&mut transformed_keypoints, 12, 14);
+                swap3p(&mut transformed_keypoints, 11, 13);
+                swap3p(&mut transformed_keypoints, 13, 15);
 
                 // ID 추가
                 keypoints.push(0.0);
